@@ -1,0 +1,4 @@
+{
+    "elemnts": ["Pyro", "Hydro", "Electro", "Anemo", "Dendro", "Geo", "Cryo"],
+    "weapons": ["Swords", "Claymores", "Polearms", "Bows", "Catalysts"]
+}
