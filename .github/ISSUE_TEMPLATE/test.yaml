@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Děkujeme za zájem o rozšíření **GBDB**! Prosím, vyplňte pole níže. [cite: 7]
+        Děkujeme za zájem o rozšíření **GBDB**! Prosím, vyplňte pole níže.
   - type: input
     id: char_id
     attributes:
@@ -26,7 +26,7 @@ body:
         - Cryo
     validations:
       required: true
-- type: textarea
+  - type: textarea
     id: description
     attributes:
       label: "Popis talentů"
