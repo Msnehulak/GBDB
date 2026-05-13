@@ -1,12 +1,65 @@
 # GBDB Characters json format
 
-## Json
+## More info
+
+### Recommend weapon's 
+Recommended list of weapona good for the character and explain why is it good.
+
+Quality of weapon (stars) and where is from (wish, anvil, explore) is stored in weapon's DB
+
+```
+"recommended_weapons": [
+ {
+  "id": str,
+  "why": str, 
+  "rating":
+ },
+]
+```
+### artefacts - set
+
+What sets are the best what jiu is good and why.
+
+ - set id: is id of full set for this character. isn't made for out of json use!
+ - id: id of artefact
+ - id2: is here if artefact cobo use 2+2 pice instead of 4 pice. is empty if it si 4 pice set.
+
+```
+"recommended_sets": [
+ {
+  "set_id" str,
+  "id": str, 
+  "id2": str, 
+  "why": str, 
+  "rating“: int,
+ },
+]
+```
+
+### artefacts - stats
+
+This is for good main or sub stats.
+
+In goblet, sans and cirlet are ids of good min stats (cr, atk, er).
+
+Substats: are for witch substats are good. can be apply on all 5 artefacts.
+```
+"stats": {
+  "goblet": [],
+  "sands": [],
+  "circlet": [],
+
+  "substats": [],
+},
+ ```
+
+## Json Show case
 
 ```
 {
  "id": str, // id of character
  "name": str, // Name of character
- "limited" boolean, // Limited = True, standard = False
+ "limited" boolean, // Is character limited. Limited = True, standard = False
  "element": str, // Element of character: Pyro, Geo, Electro
  "weapon_type": str, // Weapon character type: Sword, Bow, Catalyst
  "rarity": int, // Rarity of character. 4 or 5 star
@@ -28,8 +81,8 @@
      "id2": str, // id of 2. set if it is 2+2 instead of 4 piece. Can be null!
      "why": str, // Why is set or sets good?
      "rating“: int, // Rating of set or sets 1-10
-    }
-   ],
+  }
+ ],
   "stats": {
    "goblet": [], // List of good main stats for goblet 
    "sands": [], // List of good main stats for sans
@@ -102,6 +155,3 @@
  ],
 }
 ```
-
-## More info
-
