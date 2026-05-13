@@ -4,7 +4,7 @@ import gbdb
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-GIT_YAML_PATH = BASE_DIR / ".git" / "ISSUE_TEMPLATE"
+GIT_YAML_PATH = BASE_DIR / ".github" / "ISSUE_TEMPLATE"
 
 print(os.listdir(GIT_YAML_PATH))
 

@@ -15,7 +15,7 @@ class MasterClass:
 
 Master = MasterClass()
 
-elements = Master.master["elemnts"]
+elements = Master.master["elements"]
 weapons = Master.master["weapons"]
 
 
