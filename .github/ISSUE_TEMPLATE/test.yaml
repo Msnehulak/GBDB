@@ -23,11 +23,13 @@ body:
         - Anemo
         - Dendro
         - Geo
-        - [cite_start]Cryo [cite: 14]
+        - Cryo
     validations:
       required: true
-  - type: textarea
+- type: textarea
     id: description
     attributes:
       label: "Popis talentů"
-      [cite_start]placeholder: "Popište, co talent dělá..." [cite: 20]
+      placeholder: "Popište, co talent dělá..."
+    validations:
+      required: true
