@@ -74,7 +74,7 @@ Master = MasterClass()
 
 elements = Master.master["elements"]
 weapons = Master.master["weapons"]
-regions = Master.master["weapons"]
+regions = Master.master["regions"]
 
 
 
@@ -84,6 +84,7 @@ regions = Master.master["weapons"]
 ================================================
 FILE: code/update_yaml_forms.py
 ================================================
+from cProfile import label
 from pathlib import Path
 import json
 import gbdb
@@ -152,6 +153,7 @@ class Generate:
     @staticmethod
     def character():
         gen = YamlClass(name="Add character", description="add new Genshin Impact character to database")
+        gen.add_input(id="name", label="Character name", description="Name of Character", placeholder="Character Name")
         gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
         gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
         print(gen.generate_yaml())
@@ -223,7 +225,7 @@ What sets are the best what jiu is good and why.
   "id": str, 
   "id2": str, 
   "why": str, 
-  "rating“: int,
+  "rating": int,
  },
 ]
 ```
@@ -289,7 +291,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
    "recommend_level": int, // only for 1-3
    "name": str, // name of talent
    "description": str, // description of talent
-   "lazor": str, // description of talent in lazor language
+   "razor": str, // description of talent in lazor language
    "cooldown" int, // cooldown of talent
    "animation_time": int, // how long take to get back to game
   }
@@ -303,7 +305,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
   "cr": int, // crit rate
   "cd": int, // crit dgm
   "er": int, // energy recharge
-  "burst_cost" int, // How mouch cost burst
+  "burst_cost" int // How mouch cost burst
  },
 
  "materials": {
@@ -314,7 +316,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
   "local_spectality_id": str // a world material | character
  },
  
- “constellation": [ // List of cons and thier quality
+ "constellation": [ // List of cons and thier quality
   {
    "level": int, // con lv. 1-6
    "name": str, // con name
@@ -335,7 +337,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
  "teams": [
   {
    "name": str, // Name of team combo
-   "playstyle_id”: str, // Support build don't play as min dps
+   "playstyle_id": str, // Support build don't play as min dps
    "slot_2": list, // List off ids of character to slot 2
    "slot_3": list, // List off ids of character to slot 3
    "slot_4": list, // List off ids of character to slot 4
@@ -382,6 +384,14 @@ FILE: .github/ISSUE_TEMPLATE/new_character.yaml
 name: Add character
 description: add new Genshin Impact character to database
 body:
+- type: input
+  id: name
+  attributes:
+    label: Character name
+    description: Name of Character
+    placeholder: Character Name
+  validations:
+    required: true
 - type: dropdown
   id: element
   attributes:

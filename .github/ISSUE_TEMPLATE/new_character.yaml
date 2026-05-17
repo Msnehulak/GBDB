@@ -6,7 +6,7 @@ body:
   attributes:
     label: Character name
     description: Name of Character
-    placeholder: ex. email@example.com
+    placeholder: Character Name
   validations:
     required: true
 - type: dropdown
