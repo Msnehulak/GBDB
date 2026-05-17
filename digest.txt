@@ -3,17 +3,19 @@ Directory structure:
     ├── README.md
     ├── LICENSE
     ├── code/
+    │   ├── add_character.py
     │   ├── gbdb.py
+    │   ├── parse_issue.py
     │   └── update_yaml_forms.py
     ├── database/
     │   └── master.json
     ├── doc/
     │   └── characters.md
     └── .github/
-        └── ISSUE_TEMPLATE/
-            ├── feature_request.md
-            ├── new_character.yaml
-            └── test.yaml
+        ├── ISSUE_TEMPLATE/
+        │   └── add_character.yaml
+        └── workflows/
+            └── add_character.yml
 
 ================================================
 FILE: README.md
@@ -53,6 +55,78 @@ SOFTWARE.
 
 
 ================================================
+FILE: code/add_character.py
+================================================
+import os
+import json
+import re
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = BASE_DIR / "database"
+
+def parse_markdown_issue(issue_body):
+    """
+    Jednoduchý parser, který vytáhne data z textu GitHub Issue.
+    Hledá nadpisy formuláře (uvedené jako ### Název) a text pod nimi.
+    """
+    data = {}
+    # Rozdělíme text podle nadpisů markdownu, které generuje GitHub Issue formát
+    sections = re.split(r'###\s+', issue_body)
+    
+    for section in sections:
+        if not section.strip():
+            continue
+        lines = section.split('\n', 1)
+        key = lines[0].strip().lower().replace(" ", "_")
+        value = lines[1].strip() if len(lines) > 1 else ""
+        
+        # Očištění od případných prázdných řádků na konci
+        data[key] = value.strip()
+        
+    return data
+
+def main():
+    # GitHub Actions ukládá text celého Issue do environmentální proměnné
+    issue_body = os.environ.get("ISSUE_BODY", "")
+    
+    if not issue_body:
+        print("Žádná data z Issue nebyla nalezena.")
+        return
+
+    # Parsování dat z formuláře
+    parsed_data = parse_markdown_issue(issue_body)
+    
+    # Získání ID postavy pro název souboru (např. raiden-shogun)
+    # Pokud v novém formuláři nemáš přímo pole ID, můžeš použít očištěné jméno
+    char_id = parsed_data.get("id_postavy", parsed_data.get("character_name", "unknown")).lower().replace(" ", "-")
+    
+    # Sestavení finální struktury podle tvého doc/characters.md
+    character_json = {
+        "id": char_id,
+        "name": parsed_data.get("character_name", "Neznámé jméno"),
+        "element": parsed_data.get("element", ""),
+        "description": parsed_data.get("popis_talentů", "")
+        # Sem si pak doplníš další pole podle potřeby
+    }
+    
+    # Uložení do souboru database/characters/{char_id}.json
+    # Doporučuji ukládat postavy samostatně, ať se ti master.json nezačne hned kousat
+    output_dir = DATABASE_DIR / "characters"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    output_file = output_dir / f"{char_id}.json"
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(character_json, f, indent=4, ensure_ascii=False)
+        
+    print(f"Postava úspěšně uložena do {output_file}")
+
+if __name__ == "__main__":
+    main()
+
+
+
+================================================
 FILE: code/gbdb.py
 ================================================
 from pathlib import Path
@@ -82,6 +156,12 @@ regions = Master.master["regions"]
 
 
 ================================================
+FILE: code/parse_issue.py
+================================================
+[Empty file]
+
+
+================================================
 FILE: code/update_yaml_forms.py
 ================================================
 from cProfile import label
@@ -100,7 +180,8 @@ class YamlClass:
         self.data = {
             "name": name,
             "description": description,
-            "body": []
+            "labels": ["new-character"],
+            "body": [],
         }
 
     def add_markdown(self, value="Text v markdownu"):
@@ -353,36 +434,12 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
 
 
 ================================================
-FILE: .github/ISSUE_TEMPLATE/feature_request.md
-================================================
----
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
----
-
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
-
-
-
-================================================
-FILE: .github/ISSUE_TEMPLATE/new_character.yaml
+FILE: .github/ISSUE_TEMPLATE/add_character.yaml
 ================================================
 name: Add character
 description: add new Genshin Impact character to database
+labels:
+- new-character
 body:
 - type: input
   id: name
@@ -410,42 +467,55 @@ body:
 
 
 ================================================
-FILE: .github/ISSUE_TEMPLATE/test.yaml
+FILE: .github/workflows/add_character.yml
 ================================================
-name: "Nová postava"
-description: "Formulář pro přidání nové postavy do databáze"
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Děkujeme za zájem o rozšíření **GBDB**! Prosím, vyplňte pole níže. [cite: 7]
-  - type: input
-    id: char_id
-    attributes:
-      label: "ID postavy"
-      placeholder: "např. raiden-shogun"
-    validations:
-      required: true
-  - type: dropdown
-    id: element
-    attributes:
-      label: "Element"
-      options:
-        - Pyro
-        - Hydro
-        - Electro
-        - Anemo
-        - Dendro
-        - Geo
-        - Cryo
-    validations:
-      required: true
-- type: textarea
-    id: description
-    attributes:
-      label: "Popis talentů"
-      placeholder: "Popište, co talent dělá..."
-    validations:
-      required: true
+name: Auto Create PR from Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  create-pr:
+    # Workflow se spustí pouze tehdy, pokud má Issue správný nadpis nebo label
+    # Doporučuji v novém formuláři (yaml) nastavit fixní label, např. "new-character"
+    if: contains(github.event.issue.labels.*.name, 'new-character') || contains(github.event.issue.title, 'Add character')
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # 1. Klonování repozitáře
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Nastavení Pythonu
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Spuštění parsovacího skriptu s předáním textu z Issue
+      - name: Parse Issue and Generate JSON
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python code/add_character.py
+
+      # 4. Vytvoření Pull Requestu pomocí hotové akce
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat: add new character from Issue #${{ github.event.issue.number }}"
+          branch: "add-character/issue-${{ github.event.issue.number }}"
+          title: "Přidání postavy z Issue #${{ github.event.issue.number }}"
+          body: |
+            Tento Pull Request byl automaticky generován na základě formuláře v Issue #${{ github.event.issue.number }}.
+            Prosil bych o kontrolu dat před schválením.
+          labels: |
+            automated-pr
+            data-update
 
 

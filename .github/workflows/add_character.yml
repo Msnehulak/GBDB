@@ -30,7 +30,7 @@ jobs:
       - name: Parse Issue and Generate JSON
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-        run: python code/parse_issue.py
+        run: python code/add_character.py
 
       # 4. Vytvoření Pull Requestu pomocí hotové akce
       - name: Create Pull Request

@@ -14,7 +14,8 @@ class YamlClass:
         self.data = {
             "name": name,
             "description": description,
-            "body": []
+            "labels": ["new-character"],
+            "body": [],
         }
 
     def add_markdown(self, value="Text v markdownu"):
