@@ -31,7 +31,7 @@ What sets are the best what jiu is good and why.
   "id": str, 
   "id2": str, 
   "why": str, 
-  "rating“: int,
+  "rating": int,
  },
 ]
 ```
@@ -97,7 +97,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
    "recommend_level": int, // only for 1-3
    "name": str, // name of talent
    "description": str, // description of talent
-   "lazor": str, // description of talent in lazor language
+   "razor": str, // description of talent in lazor language
    "cooldown" int, // cooldown of talent
    "animation_time": int, // how long take to get back to game
   }
@@ -111,7 +111,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
   "cr": int, // crit rate
   "cd": int, // crit dgm
   "er": int, // energy recharge
-  "burst_cost" int, // How mouch cost burst
+  "burst_cost" int // How mouch cost burst
  },
 
  "materials": {
@@ -122,7 +122,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
   "local_spectality_id": str // a world material | character
  },
  
- “constellation": [ // List of cons and thier quality
+ "constellation": [ // List of cons and thier quality
   {
    "level": int, // con lv. 1-6
    "name": str, // con name
@@ -143,7 +143,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
  "teams": [
   {
    "name": str, // Name of team combo
-   "playstyle_id”: str, // Support build don't play as min dps
+   "playstyle_id": str, // Support build don't play as min dps
    "slot_2": list, // List off ids of character to slot 2
    "slot_3": list, // List off ids of character to slot 3
    "slot_4": list, // List off ids of character to slot 4

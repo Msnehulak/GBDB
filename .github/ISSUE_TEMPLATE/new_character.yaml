@@ -1,6 +1,14 @@
 name: Add character
 description: add new Genshin Impact character to database
 body:
+- type: input
+  id: name
+  attributes:
+    label: Character name
+    description: Name of Character
+    placeholder: ex. email@example.com
+  validations:
+    required: true
 - type: dropdown
   id: element
   attributes:

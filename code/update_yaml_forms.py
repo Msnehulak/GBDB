@@ -1,3 +1,4 @@
+from cProfile import label
 from pathlib import Path
 import json
 import gbdb
@@ -66,6 +67,7 @@ class Generate:
     @staticmethod
     def character():
         gen = YamlClass(name="Add character", description="add new Genshin Impact character to database")
+        gen.add_input(id="name", label="Character name", description="Name of Character")
         gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
         gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
         print(gen.generate_yaml())
