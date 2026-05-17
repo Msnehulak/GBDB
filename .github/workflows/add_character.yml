@@ -8,8 +8,8 @@ jobs:
   create-pr:
     # Workflow se spustí pouze tehdy, pokud má Issue správný nadpis nebo label
     # Doporučuji v novém formuláři (yaml) nastavit fixní label, např. "new-character"
-    if: contains(github.event.issue.labels.*.name, 'new-character') || contains(github.event.issue.title, 'Add character')
-    runs-on: ubuntu-latest
+    # if: contains(github.event.issue.labels.*.name, 'new-character') || contains(github.event.issue.title, 'Add character')
+    # runs-on: ubuntu-latest
     
     permissions:
       contents: write
