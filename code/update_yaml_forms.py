@@ -74,7 +74,7 @@ class Generate:
         gen.add_dropdown(id = "region", label="Region", options=gbdb.regions)
 
 
-        gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
+        gen.save_to_file(PATH_YAMAL_FORMS / "add_character.yaml")
         print(gen.generate_yaml())
 
 gen = Generate()

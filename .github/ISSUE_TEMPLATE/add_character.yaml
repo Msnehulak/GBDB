@@ -25,3 +25,29 @@ body:
     - Cryo
   validations:
     required: true
+- type: dropdown
+  id: weapon
+  attributes:
+    label: Weapon
+    options:
+    - Swords
+    - Claymores
+    - Polearms
+    - Bows
+    - Catalysts
+  validations:
+    required: true
+- type: dropdown
+  id: region
+  attributes:
+    label: Region
+    options:
+    - Mondstadt
+    - Liyue
+    - Inazuma
+    - Sumeru
+    - Fontaine
+    - Natlan
+    - Nod-Krai
+  validations:
+    required: true
