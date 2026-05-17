@@ -1,4 +1,4 @@
-from cProfile import label
+
 from pathlib import Path
 import json
 import gbdb
@@ -9,12 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 PATH_YAMAL_FORMS = BASE_DIR / ".github" / "ISSUE_TEMPLATE"
 
 class YamlClass:
-    def __init__(self, name="Custom Issue", description="Popis šablony"):
+    def __init__(self, name="Custom Issue", description="Popis šablony", labels = ["new-character"]):
         # Základní struktura GitHub Issue Template
         self.data = {
             "name": name,
             "description": description,
-            "labels": ["new-character"],
+            "labels": labels,
             "body": [],
         }
 
@@ -67,11 +67,11 @@ class YamlClass:
 class Generate:
     @staticmethod
     def character():
-        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database")
+        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database", labels=["new-character"])
         gen.add_input(id="name", label="Character name", description="Name of Character", placeholder="Character Name")
         gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
         gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.weapons)
-        gen.add_dropdown(id = "region", label="region", options=gbdb.regions)
+        gen.add_dropdown(id = "region", label="Region", options=gbdb.regions)
 
 
         gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
@@ -80,17 +80,3 @@ class Generate:
 gen = Generate()
 gen.character()
 
-# --- Použití ---
-
-app = YamlClass(name="Hlášení chyb", description="Použijte tento formulář pro nahlášení bugu.")
-
-# Přidávání komponent
-app.add_markdown(value="Děkujeme, že nám pomáháte zlepšovat projekt!")
-app.add_input(id="contact", label="Kontaktní email", description="Ozveme se vám zpět.")
-app.add_dropdown(id="priority", label="Priorita", options=["Nízká", "Střední", "Vysoká"])
-
-# Výpis do konzole
-print(app.generate_yaml())
-
-# Volitelné: Uložení do souboru
-# app.save_to_file("bug_report.yml")
