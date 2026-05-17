@@ -17,6 +17,7 @@ Master = MasterClass()
 
 elements = Master.master["elements"]
 weapons = Master.master["weapons"]
+regions = Master.master["weapons"]
 
 
 
