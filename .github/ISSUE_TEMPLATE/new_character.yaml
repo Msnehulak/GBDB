@@ -1,0 +1,53 @@
+name: Add character
+description: add new Genshin Impact character to database
+labels:
+- new-character
+body:
+- type: input
+  id: name
+  attributes:
+    label: Character name
+    description: Name of Character
+    placeholder: Character Name
+  validations:
+    required: true
+- type: dropdown
+  id: element
+  attributes:
+    label: Element
+    options:
+    - Pyro
+    - Hydro
+    - Electro
+    - Anemo
+    - Dendro
+    - Geo
+    - Cryo
+  validations:
+    required: true
+- type: dropdown
+  id: weapon
+  attributes:
+    label: Weapon
+    options:
+    - Swords
+    - Claymores
+    - Polearms
+    - Bows
+    - Catalysts
+  validations:
+    required: true
+- type: dropdown
+  id: region
+  attributes:
+    label: region
+    options:
+    - Mondstadt
+    - Liyue
+    - Inazuma
+    - Sumeru
+    - Fontaine
+    - Natlan
+    - Nod-Krai
+  validations:
+    required: true

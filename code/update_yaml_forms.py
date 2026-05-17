@@ -70,6 +70,10 @@ class Generate:
         gen = YamlClass(name="Add character", description="add new Genshin Impact character to database")
         gen.add_input(id="name", label="Character name", description="Name of Character", placeholder="Character Name")
         gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
+        gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.weapons)
+        gen.add_dropdown(id = "region", label="region", options=gbdb.regions)
+
+
         gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
         print(gen.generate_yaml())
 
