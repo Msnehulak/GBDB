@@ -10,17 +10,10 @@ PATH_YAMAL_FORMS = BASE_DIR / ".github" / "ISSUE_TEMPLATE"
 
 class YamlClass:
     def __init__(self, name="Custom Issue", description="Popis šablony", labels = ["new-character"]):
-        label = "["
-        for i in labels:
-            label += f'"{i}",'
-        label += "]"
-
-        print(label)
-
         self.data = {
             "name": name,
             "description": description,
-            "labels": label,
+            "labels": labels,
             "body": [],
         }
 
