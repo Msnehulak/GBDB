@@ -71,7 +71,6 @@ def parse_markdown_issue(issue_body):
     Hledá nadpisy formuláře (uvedené jako ### Název) a text pod nimi.
     """
     data = {}
-    # Rozdělíme text podle nadpisů markdownu, které generuje GitHub Issue formát
     sections = re.split(r'###\s+', issue_body)
     
     for section in sections:
@@ -80,25 +79,20 @@ def parse_markdown_issue(issue_body):
         lines = section.split('\n', 1)
         key = lines[0].strip().lower().replace(" ", "_")
         value = lines[1].strip() if len(lines) > 1 else ""
-        
-        # Očištění od případných prázdných řádků na konci
+
         data[key] = value.strip()
         
     return data
 
 def main():
-    # GitHub Actions ukládá text celého Issue do environmentální proměnné
     issue_body = os.environ.get("ISSUE_BODY", "")
     
     if not issue_body:
         print("Žádná data z Issue nebyla nalezena.")
         return
 
-    # Parsování dat z formuláře
     parsed_data = parse_markdown_issue(issue_body)
     
-    # Získání ID postavy pro název souboru (např. raiden-shogun)
-    # Pokud v novém formuláři nemáš přímo pole ID, můžeš použít očištěné jméno
     char_id = parsed_data.get("id_postavy", parsed_data.get("character_name", "unknown")).lower().replace(" ", "-")
     
     # Sestavení finální struktury podle tvého doc/characters.md
@@ -107,11 +101,8 @@ def main():
         "name": parsed_data.get("character_name", "Neznámé jméno"),
         "element": parsed_data.get("element", ""),
         "description": parsed_data.get("popis_talentů", "")
-        # Sem si pak doplníš další pole podle potřeby
     }
     
-    # Uložení do souboru database/characters/{char_id}.json
-    # Doporučuji ukládat postavy samostatně, ať se ti master.json nezačne hned kousat
     output_dir = DATABASE_DIR / "characters"
     output_dir.mkdir(parents=True, exist_ok=True)
     
@@ -164,7 +155,7 @@ FILE: code/parse_issue.py
 ================================================
 FILE: code/update_yaml_forms.py
 ================================================
-from cProfile import label
+
 from pathlib import Path
 import json
 import gbdb
@@ -175,12 +166,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 PATH_YAMAL_FORMS = BASE_DIR / ".github" / "ISSUE_TEMPLATE"
 
 class YamlClass:
-    def __init__(self, name="Custom Issue", description="Popis šablony"):
-        # Základní struktura GitHub Issue Template
+    def __init__(self, name="Custom Issue", description="Popis šablony", labels = ["new-character"]):
+        lable = "["
+        for i in labels:
+            lable += f'"{i}",'
+        lable += "]"
+
+        print(lable)
+
         self.data = {
             "name": name,
             "description": description,
-            "labels": ["new-character"],
+            "labels": labels,
             "body": [],
         }
 
@@ -233,29 +230,19 @@ class YamlClass:
 class Generate:
     @staticmethod
     def character():
-        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database")
+        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database", labels=["new-character"])
         gen.add_input(id="name", label="Character name", description="Name of Character", placeholder="Character Name")
         gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
-        gen.save_to_file(PATH_YAMAL_FORMS / "new_character.yaml")
+        gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.weapons)
+        gen.add_dropdown(id = "region", label="Region", options=gbdb.regions)
+
+
+        gen.save_to_file(PATH_YAMAL_FORMS / "add_character.yaml")
         print(gen.generate_yaml())
 
 gen = Generate()
 gen.character()
 
-# --- Použití ---
-
-app = YamlClass(name="Hlášení chyb", description="Použijte tento formulář pro nahlášení bugu.")
-
-# Přidávání komponent
-app.add_markdown(value="Děkujeme, že nám pomáháte zlepšovat projekt!")
-app.add_input(id="contact", label="Kontaktní email", description="Ozveme se vám zpět.")
-app.add_dropdown(id="priority", label="Priorita", options=["Nízká", "Střední", "Vysoká"])
-
-# Výpis do konzole
-print(app.generate_yaml())
-
-# Volitelné: Uložení do souboru
-# app.save_to_file("bug_report.yml")
 
 
 
@@ -463,6 +450,32 @@ body:
     - Cryo
   validations:
     required: true
+- type: dropdown
+  id: weapon
+  attributes:
+    label: Weapon
+    options:
+    - Swords
+    - Claymores
+    - Polearms
+    - Bows
+    - Catalysts
+  validations:
+    required: true
+- type: dropdown
+  id: region
+  attributes:
+    label: Region
+    options:
+    - Mondstadt
+    - Liyue
+    - Inazuma
+    - Sumeru
+    - Fontaine
+    - Natlan
+    - Nod-Krai
+  validations:
+    required: true
 
 
 
@@ -479,7 +492,7 @@ jobs:
   create-pr:
     # Workflow se spustí pouze tehdy, pokud má Issue správný nadpis nebo label
     # Doporučuji v novém formuláři (yaml) nastavit fixní label, např. "new-character"
-    if: contains(github.event.issue.labels.*.name, 'new-character') || contains(github.event.issue.title, 'Add character')
+    if: contains(github.event.issue.labels.*.name, 'new-character')
     runs-on: ubuntu-latest
     
     permissions:

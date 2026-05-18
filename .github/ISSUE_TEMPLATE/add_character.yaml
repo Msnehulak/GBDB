@@ -1,7 +1,6 @@
 name: Add character
 description: add new Genshin Impact character to database
-labels:
-- new-character
+labels: '["new-character",]'
 body:
 - type: input
   id: name
