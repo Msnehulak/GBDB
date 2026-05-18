@@ -8,7 +8,7 @@ jobs:
   create-pr:
     # Workflow se spustí pouze tehdy, pokud má Issue správný nadpis nebo label
     # Doporučuji v novém formuláři (yaml) nastavit fixní label, např. "new-character"
-    if: contains(github.event.issue.labels.*.name, 'new-character')
+    if: contains(github.event.issue.labels.*.name, 'issue_worker')
     runs-on: ubuntu-latest
     
     permissions:
@@ -30,19 +30,18 @@ jobs:
       - name: Parse Issue and Generate JSON
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-        run: python code/add_character.py
+        run: python code/issue_worker.py
 
       # 4. Vytvoření Pull Requestu pomocí hotové akce
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: add new character from Issue #${{ github.event.issue.number }}"
-          branch: "add-character/issue-${{ github.event.issue.number }}"
-          title: "Přidání postavy z Issue #${{ github.event.issue.number }}"
+          commit-message: "feat: Issue Worker commit #${{ github.event.issue.number }}"
+          branch: "issue_worker/issue-${{ github.event.issue.number }}"
+          title: "Worker start form Issue #${{ github.event.issue.number }}"
           body: |
-            Tento Pull Request byl automaticky generován na základě formuláře v Issue #${{ github.event.issue.number }}.
-            Prosil bych o kontrolu dat před schválením.
+            This pull requests is automated form issue forms
           labels: |
             automated-pr
             data-update

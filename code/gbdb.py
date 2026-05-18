@@ -11,13 +11,13 @@ class MasterClass:
     def load_master_file(self):
         with open(PATH_MASTER_FILE, "r", encoding="utf-8") as f:
             self.master = json.load(f)
+class Cons:
+    def __init__(self):
+        Master = MasterClass()
 
+        self.elements = Master.master["elements"]
+        self.weapons = Master.master["weapons"]
+        self.regions = Master.master["regions"]
 
-Master = MasterClass()
-
-elements = Master.master["elements"]
-weapons = Master.master["weapons"]
-regions = Master.master["regions"]
-
-
+cons = Cons()
 

@@ -1,5 +1,5 @@
 {
     "elements": ["Pyro", "Hydro", "Electro", "Anemo", "Dendro", "Geo", "Cryo"],
-    "weapons": ["Swords", "Claymores", "Polearms", "Bows", "Catalysts"],
+    "weapons": ["Sword", "Claymore", "Polearm", "Bow", "Catalyst"],
     "regions": ["Mondstadt", "Liyue", "Inazuma", "Sumeru", "Fontaine", "Natlan", "Nod-Krai"]
 }

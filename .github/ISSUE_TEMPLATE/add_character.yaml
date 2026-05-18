@@ -1,6 +1,7 @@
 name: Add character
 description: add new Genshin Impact character to database
-labels: '["new-character",]'
+labels:
+- issue_worker
 body:
 - type: input
   id: name
@@ -29,11 +30,11 @@ body:
   attributes:
     label: Weapon
     options:
-    - Swords
-    - Claymores
-    - Polearms
-    - Bows
-    - Catalysts
+    - Sword
+    - Claymore
+    - Polearm
+    - Bow
+    - Catalyst
   validations:
     required: true
 - type: dropdown

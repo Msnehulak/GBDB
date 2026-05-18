@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 PATH_YAMAL_FORMS = BASE_DIR / ".github" / "ISSUE_TEMPLATE"
 
 class YamlClass:
-    def __init__(self, name="Custom Issue", description="Popis šablony", labels = ["new-character"]):
+    def __init__(self, name="Custom Issue", description="Popis šablony", labels = ["issue_worker"]):
         self.data = {
             "name": name,
             "description": description,
@@ -65,17 +65,26 @@ class YamlClass:
 
 class Generate:
     @staticmethod
-    def character():
-        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database", labels=["new-character"])
+    def character(print_output: bool = False):
+        gen = YamlClass(name="Add character", description="add new Genshin Impact character to database", labels=["issue_worker"])
         gen.add_input(id="name", label="Character name", description="Name of Character", placeholder="Character Name")
-        gen.add_dropdown(id = "element", label="Element", options=gbdb.elements)
-        gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.weapons)
-        gen.add_dropdown(id = "region", label="Region", options=gbdb.regions)
-
+        gen.add_dropdown(id = "element", label="Element", options=gbdb.cons.elements)
+        gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.cons.weapons)
+        gen.add_dropdown(id = "region", label="Region", options=gbdb.cons.regions)
 
         gen.save_to_file(PATH_YAMAL_FORMS / "add_character.yaml")
-        print(gen.generate_yaml())
+        if print_output: print(gen.generate_yaml())
+
+    @staticmethod
+    def weapon(print_output: bool = False):
+        gen = YamlClass(name="Add weapon", description="add new Genshin Impact weapon to database", labels=["issue_worker"]) 
+        gen.add_dropdown(id = "weapon", label="Weapon", options=gbdb.cons.weapons)
+
+        gen.save_to_file(PATH_YAMAL_FORMS / "add_weapon.yaml")
+        if print_output: print(gen.generate_yaml())
+
+
 
 gen = Generate()
-gen.character()
+gen.character(print_output=True)
 

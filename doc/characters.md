@@ -63,7 +63,7 @@ Substats: are for witch substats are good. can be apply on all 5 artefacts.
  "element": str, // Element of character: Pyro, Geo, Electro
  "weapon_type": str, // Weapon character type: Sword, Bow, Catalyst
  "rarity": int, // Rarity of character. 4 or 5 star
- "region_id": str, // Monstad, Fontaine, Inazima
+ "region": str, // Monstad, Fontaine, Inazima
  
  "recommended_weapons": [ // list of recommend weapons
   {
